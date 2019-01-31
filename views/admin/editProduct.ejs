@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%=product.productName %></title>
+	<link rel="icon" type="image/ico" href="./../../images/k.jpg" />
+	<% include ./../header/sandstone_styles.ejs %>
+</head>
+<body style="margin: 2em;">
+	<% include ./../header/nav.ejs %>
+	
+	<div align="center"><h1>Edit <%=product.productName %></h1></div>
+	<form action = "/admin/edit/<%= product._id %>" method = "POST">
+			<div class="form-group row" align="center">
+      			<label for="name" class="col-sm-3 col-form-label"><h4>Name</h4></label>
+      			<div class="col-sm-6">
+        			<input type="text" class="form-control" id="productName" name="productName" placeholder="Enter Product Name" value="<%= product.productName %>">
+      			</div>
+	            <div class="col-sm-3"></div>
+
+      			<label for="description" class="col-sm-3 col-form-label"><h4>Description</h4></label>
+      			<div class="col-sm-6">
+        			<input type="text" class="form-control" id="productDescription" name="productDescription" placeholder="Enter Product Description" value="<%= product.productDescription %>">
+      			</div>
+	            <div class="col-sm-3"></div>
+
+      			<label for="productPrice" class="col-sm-3 col-form-label"><h4>Price</h4></label>
+      			<div class="col-sm-6">
+        			<input type="number" class="form-control" id="productPrice" name="productPrice" placeholder="Enter Product Price" value="<%= product.productPrice %>">
+      			</div>
+	            <div class="col-sm-3"></div>
+
+	            <label for="productRentPrice" class="col-sm-3 col-form-label"><h4>Rent Price/Peice</h4></label>
+	            <div class="col-sm-6">
+	              <input type="number" class="form-control" id="producRenttPrice" name="productRentPrice" placeholder="Enter Product Rent Price per Peice" value="<%= product.productRentPrice %>">
+	            </div>
+	            <div class="col-sm-3"></div>
+
+	            <label for="productQuantity" class="col-sm-3 col-form-label"><h4>Quantity</h4></label>
+	            <div class="col-sm-6">
+	              <input type="number" class="form-control" id="productQuantity" name="productQuantity" placeholder="Enter Product Quantity" value="<%= product.productQuantity %>">
+	            </div>
+	            <div class="col-sm-3"></div>
+    		</div>
+    		<div align="center"><button type="submit" class="btn btn-primary" value="Register">Edit</button></div>
+	</form>
+
+	<% include ./../footer/sandstone_scripts.ejs %>
+</body>
+</html>

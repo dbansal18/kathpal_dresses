@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Shop Now</title>
+  <link rel="icon" type="image/ico" href="./images/k.jpg" />
+	<% include ./header/sandstone_styles.ejs %>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+	<% include ./header/nav.ejs %>
+  <div class="alertDiv fixed-top" id="alertDiv"></div>
+  <table id="myTable" class="display">
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Price(in INR)</th>
+        <th>Rent Price(in INR)/Peice</th>
+        <th>Image</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (var i = 0; i < products.length; i++) { %>
+        <tr>
+            <td>
+              <a href="/shop/product/<%= products[i]._id %>"><%= products[i].productName %><br></a>
+              <!-- <% if(user) { %>
+                <% if(products[i].productQuantity > 0) { %>
+                  <button id="<%= products[i]._id %>" onclick="addToCart(this.id)">Add to cart<i class="fa fa-cart-plus fa-spin"></i></button>
+                <% } %>
+              <% } %> -->
+            </td>
+            <td><%= products[i].productPrice %></td>
+            <td><%= products[i].productRentPrice %></td>
+            <td><img style="max-width: 100px; max-height: 150px" src="products/<%= products[i].thumbnail[0] %>"></td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+	<% include ./footer/sandstone_scripts.ejs %>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready( function () {
+      $('#myTable').DataTable();
+    } );
+
+    function addToCart(prodId) {
+      // console.log(prodId);
+      data = {'id': prodId}
+        $.ajax({
+            type: 'GET',
+            url : '/cart/addToCart',
+            data: data, 
+            success: (data)=> {
+                // console.log(data);
+                if(data.status==1) {
+                  var alertBox = "";
+                  alertBox += '<div class="alert alert-dismissible alert-success" id="alertDivs">';
+                  alertBox += '<button type="button" class="close" data-dismiss="alert">&times;</button>';
+                  alertBox += '<strong>Successfully Added to Cart!</strong>';
+                  alertBox += '</div>';
+                  $("#alertDiv").append(alertBox);
+                  setTimeout(myFunction, 3000);
+                  function myFunction() {
+                    $('#alertDivs').remove();
+                  }
+                } else if(data.status==2) {
+                  var alertBox = "";
+                  alertBox += '<div class="alert alert-dismissible alert-warning" id="alertDivs">';
+                  alertBox += '<button type="button" class="close" data-dismiss="alert">&times;</button>';
+                  alertBox += '<strong>Already in cart!</strong>';
+                  alertBox += '</div>';
+                  $("#alertDiv").append(alertBox);
+                  setTimeout(myFunction, 3000);
+                  function myFunction() {
+                    $('#alertDivs').remove();
+                  }
+                } else {
+                  var alertBox = "";
+                  alertBox += '<div class="alert alert-dismissible alert-danger" id="alertDivs">';
+                  alertBox += '<button type="button" class="close" data-dismiss="alert">&times;</button>';
+                  alertBox += '<strong>Some Error Occurs!</strong>';
+                  alertBox += '</div>';
+                  $("#alertDiv").append(alertBox);
+                  setTimeout(myFunction, 3000);
+                  function myFunction() {
+                    $('#alertDivs').remove();
+                  }
+                }
+            }
+        });
+    }
+  </script>
+</body>
+</html>

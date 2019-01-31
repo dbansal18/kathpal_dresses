@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login</title>
+      <link rel="icon" type="image/ico" href="../images/k.jpg" />
+	<% include ./../header/sandstone_styles.ejs %>
+</head>
+<body>
+	<% include ../header/nav.ejs %>
+
+	<form action = "/auth/local" method = "POST">
+			<div class="form-group row" align="center">
+      			<label for="username" class="col-sm-3 col-form-label"><h4>Username</h4></label>
+      			<div class="col-sm-6">
+        			<input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" required="required">
+      			</div>
+            <div class="col-sm-3"></div>
+      			<label for="password" class="col-sm-3 col-form-label"><h4>Password</h4></label>
+      			<div class="col-sm-6">
+        			<input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required="required">
+      			</div>
+            <div class="col-sm-3"></div>
+    		</div>
+    		<div align="center"><button type="submit" class="btn btn-primary" value="Login">Login</button></div><br>
+	</form>
+  <div align="center"><button type="button" class="btn btn-danger"><a href="/auth/google" style="color: white;">Google Login</a></button></div>
+	<% include ../footer/sandstone_scripts.ejs %>
+</body>
+</html>

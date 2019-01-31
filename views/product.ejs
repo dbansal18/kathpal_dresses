@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%=product.productName %></title>
+	<link rel="icon" type="image/ico" href="./../../images/k.jpg" />
+	<% include ./header/sandstone_styles.ejs %>
+	<style type="text/css">
+				/* Button used to open the contact form - fixed at the bottom of the page */
+		.open-button {
+		  background-color: white;
+		  color: red;
+		  padding: 16px 20px;
+		  border: none;
+		  cursor: pointer;
+		  opacity: 0.8;
+		  /*position: fixed;*/
+		  /*bottom: 23px;*/
+		  right: 28px;
+		  width: 80px;
+		}
+
+		/* The popup form - hidden by default */
+		.form-popup {
+		  display: none;
+		  position: fixed;
+		  bottom: 0;
+		  right: 15px;
+		  border: 3px solid #f1f1f1;
+		  z-index: 9;
+		}
+
+		/* Add styles to the form container */
+		.form-container {
+		  max-width: 300px;
+		  padding: 10px;
+		  background-color: white;
+		}
+
+		/* Full-width input fields */
+		.form-container input[type=text], .form-container input[type=password] {
+		  width: 100%;
+		  padding: 15px;
+		  margin: 5px 0 22px 0;
+		  border: none;
+		  background: #f1f1f1;
+		}
+
+		/* When the inputs get focus, do something */
+		.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+		  background-color: #ddd;
+		  outline: none;
+		}
+
+		/* Set a style for the submit/login button */
+		.form-container .btn {
+		  background-color: #4CAF50;
+		  color: white;
+		  padding: 16px 20px;
+		  border: none;
+		  cursor: pointer;
+		  width: 100%;
+		  margin-bottom:10px;
+		  opacity: 0.8;
+		}
+
+		/* Add a red background color to the cancel button */
+		.form-container .cancel {
+		  background-color: red;
+		}
+
+		/* Add some hover effects to buttons */
+		.form-container .btn:hover, .open-button:hover {
+		  opacity: 1;
+		}
+	</style>
+</head>
+<body style="margin: 2em;">
+	<% include ./header/nav.ejs %>
+
+	<div class="alertDiv fixed-top" id="alertDiv"></div>
+
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="card border-primary mb-3">
+  				<div class="card-header"><h4><%=product.productName %></h4></div>
+  				<div class="card-body">
+  					<h5 class="card-title">Price <strong>Rs. <%=product.productPrice %></strong></h5>
+  					<h5 class="card-title">For Rent <strong>Rs. <%=product.productRentPrice %></strong> per peice</h5>
+				    <p class="card-text"><%=product.productDescription %></p>
+				    <% if(user) if(user.role==='admin') { %>
+				    	<h5 class="card-title"><strong>Quantity: </strong><%=product.productQuantity %></h5>
+				    	<a href="/admin/edit/<%=product._id%>" class="card-link">Edit</a>
+				    <% } %>
+				    <% if(user) { %>
+				    	<button class="open-button" onclick="openForm()">Rent</button>
+
+				    	<div class="form-popup form-container" id="myForm">
+						  <!-- <form class="form-container" action="#"> -->
+						    <h1>Rent</h1>
+
+						    <label for="quantity"><b>Quantity</b></label>
+						    <input type="number" id="quantityID" placeholder="Enter Quantity" name="quantity" min="0" required>
+
+						    <% var d = new Date();
+						    if(d.getUTCMonth() < 9) {
+						    	var m = d.getUTCMonth() + 1;
+						    	m = '0' + m; 
+							} else {
+								var m = d.getUTCMonth() + 1;
+							}
+						    min_date = d.getFullYear() + '-' + m + '-' + d.getDate(); %>
+						    <label for="start_date"><b>Start Date</b></label>
+						    <input type="date" id="minID" min="<%= min_date %>" name="from_date" required>
+						    <label for="start_date"><b>End Date</b></label>
+						    <input type="date" id="maxID" min="<%= min_date %>" name="to_date" required>
+						    <button type="submit" class="btn" onclick="rent('<%=product._id%>')">Submit</button>
+						    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+						  <!-- </form> -->
+						</div>
+
+				    <% } %>
+  				</div>
+			</div>
+		</div>
+		<div class="col-sm-6" style="background-color: #ffcdd2">
+			<div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
+				<ol class="carousel-indicators">
+					<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+					<% for(var i = 1; i< product.thumbnail.length ; i++) { %>
+						<li data-target="#carouselExampleIndicators" data-slide-to="<%= i %>"></li>
+					<% } %>
+				</ol>
+				<div class="carousel-inner" role="listbox">
+					<div class="carousel-item active" align="center">
+					<img class="d-block img-fluid" style="max-width: 900px; max-height: 350px;" src="./../../products/<%= product.thumbnail[0] %>" alt="First slide">
+					</div>
+					<% for(var i = 1; i< product.thumbnail.length ; i++) { %>
+						<div class="carousel-item" align="center">
+							<img class="d-block img-fluid" style="max-width: 900px; max-height: 350px;" src="./../../products/<%= product.thumbnail[i] %>" alt="Second slide" sty>
+						</div>
+					<% } %>
+				</div>
+				<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					<span class="sr-only">Previous</span>
+				</a>
+				<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+					<span class="carousel-control-next-icon" aria-hidden="true"></span>
+					<span class="sr-only">Next</span>
+				</a>
+			</div>
+		</div>
+	</div>
+	
+	<% include ./footer/sandstone_scripts.ejs %>
+
+	<script type="text/javascript">
+
+		function openForm() {
+		  document.getElementById("myForm").style.display = "block";
+		}
+
+		function closeForm() {
+		  document.getElementById("myForm").style.display = "none";
+		}
+
+		function rent(id) {
+			var quantity = document.getElementById("quantityID").value;
+			var mindate = document.getElementById("minID").value;
+			var maxdate = document.getElementById("maxID").value;
+			// console.log(id);
+			if(mindate > maxdate) {
+				// console.log('nooooo');
+				var alertBox = "";
+				alertBox += '<div class="alert alert-dismissible alert-danger" id="alertDivs">';
+				alertBox += '<button type="button" class="close" data-dismiss="alert">&times;</button>';
+				alertBox += '<strong>End date is earlier than start date</strong>';
+				alertBox += '</div>';
+				$("#alertDiv").append(alertBox);
+				setTimeout(myFunction, 3000);
+				function myFunction() {
+					$('#alertDivs').remove();
+				}
+			} else {
+				document.getElementById("myForm").style.display = "none";
+				// console.log(quantity , mindate , maxdate);
+				data = {
+					quantity: quantity,
+					mindate: mindate,
+					maxdate: maxdate,
+					id: id
+				}
+				$.ajax({
+		            type: 'GET',
+		            url : '/rent/',
+		            data: data, 
+		            success: (data)=> {
+		                // console.log(data);
+		                // addToPage(data);
+		                // alert(data.total, data.status);
+		                if(data.status == 0) {
+		                	var alertBox = "";
+							alertBox += '<div class="alert alert-dismissible alert-danger" id="alertDivs">';
+							alertBox += '<button type="button" class="close" data-dismiss="alert">&times;</button>';
+							alertBox += '<strong>Something went wrong</strong>';
+							alertBox += '</div>';
+							$("#alertDiv").append(alertBox);
+							setTimeout(myFunction, 3000);
+							function myFunction() {
+								$('#alertDivs').remove();
+							}
+		                } else {
+		                	var alertBox = "";
+							alertBox += '<div class="alert alert-dismissible alert-success" id="alertDivs">';
+							alertBox += '<button type="button" class="close" data-dismiss="alert">&times;</button>';
+							alertBox += '<strong>Sucessfully acknowledge to admin. Please wait till confermation. Your total will be Rs. </strong>' + data.total;
+							alertBox += '</div>';
+							$("#alertDiv").append(alertBox);
+							setTimeout(myFunction, 3000);
+							function myFunction() {
+								$('#alertDivs').remove();
+							}
+		                }
+		            }
+		        });
+			}	
+		}
+
+	</script>
+
+</body>
+</html>

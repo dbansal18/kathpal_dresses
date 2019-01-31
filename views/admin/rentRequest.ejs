@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Rent Requests</title>
+      <link rel="icon" type="image/ico" href="../images/k.jpg" />
+	<% include ./../header/sandstone_styles.ejs %>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+</head>
+<body>
+	<% include ../header/nav.ejs %>
+
+  <table id="myTable" class="display">
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Rent Price</th>
+        <th>Username</th>
+        <th>Total</th>
+        <th>Rent Quantity</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (var i = 0; i < rent.length ; i++) { %>
+        <tr>
+            <td><%= rent[i].productName %></td>
+            <td><%= rent[i].productRentPrice %></td>
+            <td><%= rent[i].user.name %></td>
+            <td><%= rent[i].rentTotal %></td>
+            <td><%= rent[i].rentQuantity %></td>
+            <td><%= rent[i].startDate %></td>
+            <td><%= rent[i].endDate %></td>
+            <td><a href="#" onclick="aprove()"><%= rent[i].status %></a></td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+	<% include ../footer/sandstone_scripts.ejs %>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready( function () {
+      $('#myTable').DataTable();
+    });
+    
+  </script>
+</body>
+</html>

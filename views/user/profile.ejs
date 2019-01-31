@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+  <head>
+        <meta charset="utf-8">
+        <title>Profile</title>
+        <link rel="icon" type="image/ico" href="../images/k.jpg" />
+
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <% include ./../header/sandstone_styles.ejs %>
+
+    </head>
+    <body class="bg">
+        <% include ./../header/nav.ejs %>
+        <header>
+            <h1>Welcome to your profile, <%= user.name %></h1>
+        </header>
+        <main>
+            <img style="max-height: 350px; max-width: 350px;" src= "/uploads/<%= user.thumbnail %>" />
+            <p>This is your profile picture</p>
+        </main>
+        <h2>
+            <% if(user.role=='admin') { %>
+            <a href="/admin/add-product">Add New Product</a>
+     <%  } %>
+        </h2>
+        <% include ./../footer/sandstone_scripts.ejs %>
+    </body>
+</html>
