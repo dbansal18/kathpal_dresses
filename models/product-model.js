@@ -7,7 +7,9 @@ const productSchema = new Schema({
     productPrice: Number,
     productRentPrice: Number,
     productQuantity: Number,
-    category: String,
+    category: {
+    	name: { type: String, uppercase: true }
+    },
     thumbnail: [String]
 });
 

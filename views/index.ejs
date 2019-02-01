@@ -1,15 +1,3 @@
-<!-- <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
-</html> -->
-
 <html lang="en">
 
   <head>
@@ -45,9 +33,9 @@
 <!--           <h1 class="my-4">Shop Name</h1> -->
 			<div align="center"><img src="./images/k1.png" style="max-width: 250px"><br><br></div>
           <div class="list-group">
-            <a href="#" class="list-group-item">Category 1</a>
-            <a href="#" class="list-group-item">Category 2</a>
-            <a href="#" class="list-group-item">Category 3</a>
+            <% for(var i = 0; i < category.length; i++) {%>
+              <a href="/category/<%= category[i].name %>" class="list-group-item"><%= category[i].name %></a>
+            <% } %>
           </div>
 
         </div>

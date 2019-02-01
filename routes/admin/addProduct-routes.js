@@ -2,6 +2,7 @@ var express = require('express');
 var app=express();
 var router = require('express').Router();
 const Product = require('../../models/product-model');
+const Category = require('../../models/category-model');
 
 var multer=require('multer');
 var path =require('path');
@@ -72,24 +73,63 @@ router.post('/', authCheck, urlencodedParser ,upload.array('myImage') , function
                 res.redirect('/admin/add-product');
             } 
             else {
-                    var product = new Product();
-                    product.productName= req.body.productName;
-                    product.productDescription= req.body.productDescription;
-                    product.productPrice= req.body.productPrice;
-                    product.productRentPrice= req.body.productRentPrice;
-                    product.productQuantity= req.body.productQuantity;
-                    product.thumbnail = thumbnailPath;
-                product.save((err,newProduct)=>
-                {
-                	console.log('product created :',newProduct.productName ); 
-                	res.redirect('/');
-                });
-                var l=thumbnailPath.length;
-                for(var i=0;i<l;i++){
-                   thumbnailPath.pop();
-                }
+                    new Product().save().then((product) => {
+                        product.productName = req.body.productName;
+                        product.productDescription = req.body.productDescription;
+                        product.category.name = req.body.category;
+                        product.category.id = '';
+                        Category.findOne({name: product.category.name}, function (err, category) {
+                            if (err) throw (err);
+                            if (category) {
+                                // product.category.id = category._id;
+                                // var length = category.product.length;
+                                var products = {
+                                        name: product.productName,
+                                        id: product._id
+                                    }
+                                category.product.push(products);
+                                category.save((err, update) => {
+                                    if (err) throw err;
+                                })
+                                // category.product[length].id = product._id;
+                                // category.product[length].name = product.name;
+                            } else {
+                                new Category({
+                                    name: product.category.name,
+                                }).save().then((newCategory) => {
+                                    // product.category.id = newCategory._id;
+                                    // newCategory.product[0].id = product._id,
+                                    // newCategory.product[0].name = product.name
+                                    var products = {
+                                        name: product.productName,
+                                        id: product._id
+                                    }
+                                    newCategory.product.push(products);
+                                    newCategory.save((err, update) => {
+                                        if (err) throw err;
+                                    })
+                                })
+                            }
+                        })
+                        product.productPrice = req.body.productPrice;
+                        product.productRentPrice = req.body.productRentPrice;
+                        product.productQuantity = req.body.productQuantity;
+                        product.thumbnail = thumbnailPath;
+                        product.save((err,newProduct)=>
+                        {
+                            console.log('product created :',newProduct.productName ); 
+                            var l=thumbnailPath.length;
+                            for(var i=0;i<l;i++){
+                               thumbnailPath.pop();
+                            }
+                            res.redirect('/');
+                        })
+                            
+                    });
+                    
+                
 
-            }
+            } 
         });
 	}
 });
